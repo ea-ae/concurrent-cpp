@@ -16,7 +16,7 @@ int Foo::work(int32_t id, std::shared_ptr<int> input) {
 }
 
 
-void run_threads() {
+void try_threads() {
 	std::vector<std::thread> threads;
 	for (uint32_t i = 0; i < g_processors; i++) { // create thread for every processor
 		threads.emplace_back([i]() { // perform some calculations in each thread
@@ -28,8 +28,8 @@ void run_threads() {
 			std::cout << result;
 		});
 	}
-	for (auto &thread : threads)
-		thread.join();
+	for (auto &t : threads)
+		t.join();
 
 	std::vector<std::future<int32_t>> tasks;
 	std::vector<std::shared_ptr<int32_t>> results; // just for the sake of it!

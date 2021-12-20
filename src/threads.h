@@ -8,4 +8,4 @@ public:
 	int work(int32_t id, std::shared_ptr<int32_t> input);
 };
 
-void run_threads();
+void try_threads();
