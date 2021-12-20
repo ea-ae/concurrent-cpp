@@ -140,11 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="threads.cpp" />
+    <ClCompile Include="src\locks.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\threads.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="threads.h" />
+    <ClInclude Include="src\locks.h" />
+    <ClInclude Include="src\threads.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
