@@ -4,10 +4,10 @@
 #include <mutex>
 #include <shared_mutex>
 #include <condition_variable>
-#include <semaphore>
 #include <thread>
 #include <chrono>
 #include <vector>
+#include <queue>
 #include <stack>
 #include <cassert>
 #include <iostream>
@@ -18,21 +18,10 @@ static void work_and_add_to_stack(int32_t value) {
 	static std::stack<int32_t> values;
 	std::this_thread::sleep_for(std::chrono::milliseconds(250)); // do some hard work
 	{
-		std::scoped_lock<std::mutex> lock(mut); // lock the mutex with a lock guard, RAII-style
+		auto lock = std::scoped_lock(mut); // lock the mutex with a lock guard, RAII-style
 		values.push(value);
 	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(250)); // more work after accessing shared data
-}
-
-static void produce(std::queue<int32_t> &tasks) {
-	static std::vector<int32_t> chunks_todo(200, 10);
-	int32_t chunk = chunks_todo.back();
-	chunks_todo.pop_back();
-	std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int32_t>(round(chunk / 2))));
-}
-
-static void consume(std::queue<int32_t> &tasks) {
-
 }
 
 void try_locks() {
@@ -61,14 +50,14 @@ void try_locks() {
 	for (int32_t i = 0; i < 50; i++) {
 		if (i % 5 == 0) { // writer
 			threads.emplace([&s_mut, &value] {
-				std::unique_lock<std::shared_mutex> lock(s_mut, std::defer_lock);
+				auto lock = std::unique_lock(s_mut, std::defer_lock);
 				lock.lock();
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 				value += 1;
 			});
 		} else { // reader
 			auto t = std::thread([&s_mut, &value] {
-				std::shared_lock<std::shared_mutex> lock(s_mut, std::defer_lock);
+				auto lock = std::shared_lock(s_mut, std::defer_lock);
 				lock.lock();
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			});
@@ -96,7 +85,7 @@ void try_locks() {
 
 	for (int32_t i = 0; i < 5; i++) {
 		threads.emplace([&mut, &condition, &tasks] { // consumer
-			std::unique_lock<std::mutex> lock(mut, std::defer_lock);
+			auto lock = std::unique_lock(mut, std::defer_lock);
 			while (true) {
 				lock.lock();
 				condition.wait(lock, [&tasks] { return !tasks.empty(); });
@@ -112,7 +101,7 @@ void try_locks() {
 
 		auto tt = std::thread([&mut, &condition, &tasks] { // producer
 			static std::vector<int32_t> chunks_todo(5 * 40, 10);
-			std::unique_lock<std::mutex> lock(mut, std::defer_lock);
+			auto lock = std::unique_lock(mut, std::defer_lock);
 			while (true) {
 				std::this_thread::sleep_for(std::chrono::milliseconds(25)); // produce chunks
 				lock.lock();

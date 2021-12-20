@@ -4,8 +4,8 @@
 #include <thread>
 #include <future>
 #include <vector>
-#include <iostream>
 #include <string>
+#include <iostream>
 
 
 int Foo::work(int32_t id, std::shared_ptr<int> input) {
