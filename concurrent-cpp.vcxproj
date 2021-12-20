@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="src\locks.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\main.h" />
     <ClCompile Include="src\threads.cpp" />
   </ItemGroup>
   <ItemGroup>
