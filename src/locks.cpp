@@ -111,7 +111,6 @@ void try_locks() {
 					return;
 				}
 				for (int i = 0; i < 5; i++) {
-					int32_t chunk = chunks_todo.back();
 					tasks.push(chunks_todo.back());
 					chunks_todo.pop_back();
 				}

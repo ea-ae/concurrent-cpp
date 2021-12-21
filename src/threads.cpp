@@ -40,4 +40,22 @@ void try_threads() {
 	}
 	for (size_t i = 0; i < tasks.size(); i++)
 		std::cout << "Done at thread " << i << ": <return " << tasks[i].get() << "> <result " << *results[i] << ">\n";
+
+	std::packaged_task<int32_t(int32_t, int32_t)> addition_task([](int32_t a, int32_t b) { return a + b; });
+	auto add_fut = addition_task.get_future();
+	int32_t x = 3;
+	std::packaged_task subtraction_task([x](int32_t a) -> int32_t { return a - x; }); // can we steal vars here?
+	std::promise<int32_t> fnord;
+	auto prom_fut = fnord.get_future();
+
+	auto task_runner = std::thread([&addition_task, &subtraction_task, &fnord] { 
+		fnord.set_value_at_thread_exit(666);
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		addition_task(10, 5);
+		subtraction_task(10); // 10-3=7
+	});
+	task_runner.detach();
+
+	auto sub_fut = subtraction_task.get_future();
+	std::cout << "Add: " << add_fut.get() << " Sub: " << sub_fut.get() << " Promise: " << prom_fut.get() << "\n";
 }

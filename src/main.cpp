@@ -11,6 +11,6 @@ const uint32_t g_processors = std::thread::hardware_concurrency();
 int main()
 {
     std::cout << "Hello World!\n";
-    try_threads(); // Threads and futures
-    try_locks(); // Mutexes and more
+    try_threads(); // Threads, futures, promises, tasks
+    try_locks(); // Mutexes, control variables
 }
