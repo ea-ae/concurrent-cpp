@@ -50,7 +50,7 @@ void try_threads() {
 
 	auto task_runner = std::thread([&addition_task, &subtraction_task, &fnord] { 
 		fnord.set_value_at_thread_exit(666);
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		thread_sleep(200);
 		addition_task(10, 5);
 		subtraction_task(10); // 10-3=7
 	});
@@ -58,4 +58,7 @@ void try_threads() {
 
 	auto sub_fut = subtraction_task.get_future();
 	std::cout << "Add: " << add_fut.get() << " Sub: " << sub_fut.get() << " Promise: " << prom_fut.get() << "\n";
+
+	// Let's crash! Replace std::jthread with std::thread, abort() will be called on thread destruction
+	auto the_eater_of_souls = std::jthread([] { thread_sleep(1000); });
 }

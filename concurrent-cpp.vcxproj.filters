@@ -27,12 +27,18 @@
     <ClCompile Include="src\main.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\sync.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\threads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\locks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\sync.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

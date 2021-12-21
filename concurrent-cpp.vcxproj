@@ -143,10 +143,12 @@
     <ClCompile Include="src\locks.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\main.h" />
+    <ClCompile Include="src\sync.cpp" />
     <ClCompile Include="src\threads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\locks.h" />
+    <ClInclude Include="src\sync.h" />
     <ClInclude Include="src\threads.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

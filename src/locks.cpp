@@ -16,12 +16,12 @@
 static void work_and_add_to_stack(int32_t value) {
 	static std::mutex mut;
 	static std::stack<int32_t> values;
-	std::this_thread::sleep_for(std::chrono::milliseconds(250)); // do some hard work
+	thread_sleep(250); // do some hard work
 	{
 		auto lock = std::scoped_lock(mut); // lock the mutex with a lock guard, RAII-style
 		values.push(value);
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(250)); // more work after accessing shared data
+	thread_sleep(250); // more work after accessing shared data
 }
 
 void try_locks() {
@@ -47,19 +47,19 @@ void try_locks() {
 	assert(threads.empty());
 	std::shared_mutex s_mut;
 	int32_t value = 42;
-	for (int32_t i = 0; i < 50; i++) {
+	for (int32_t i = 0; i < 25; i++) {
 		if (i % 5 == 0) { // writer
 			threads.emplace([&s_mut, &value] {
 				auto lock = std::unique_lock(s_mut, std::defer_lock);
 				lock.lock();
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				thread_sleep(100);
 				value += 1;
 			});
 		} else { // reader
 			auto t = std::thread([&s_mut, &value] {
 				auto lock = std::shared_lock(s_mut, std::defer_lock);
 				lock.lock();
-				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				thread_sleep(100);
 			});
 			t.detach();
 		}
@@ -72,7 +72,7 @@ void try_locks() {
 	end = std::chrono::system_clock::now();
 	elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 	std::cout << "Final value is " << value << ". ";
-	std::cout << "Read/write time elapsed: " << elapsed.count() << "ms (100*50=5000ms)\n"; // we get ~2000ms: makes sense!
+	std::cout << "Read/write time elapsed: " << elapsed.count() << "ms (100*25=2500ms)\n"; // we get ~2000ms: makes sense!
 
 	// Producers and consumers
 	start = std::chrono::system_clock::now();
@@ -84,7 +84,7 @@ void try_locks() {
 
 
 	for (int32_t i = 0; i < 5; i++) {
-		threads.emplace([&mut, &condition, &tasks] { // consumer
+		threads.emplace([&] { // consumer
 			auto lock = std::unique_lock(mut, std::defer_lock);
 			while (true) {
 				lock.lock();
@@ -95,15 +95,15 @@ void try_locks() {
 				if (chunk == -1) { // poison pill
 					return;
 				}
-				std::this_thread::sleep_for(std::chrono::milliseconds(chunk)); // process chunk
+				thread_sleep(chunk); // process chunk
 			}
 		});
 
-		auto tt = std::thread([&mut, &condition, &tasks] { // producer
+		auto tt = std::thread([&] { // producer
 			static std::vector<int32_t> chunks_todo(5 * 40, 10);
 			auto lock = std::unique_lock(mut, std::defer_lock);
 			while (true) {
-				std::this_thread::sleep_for(std::chrono::milliseconds(25)); // produce chunks
+				thread_sleep(25); // produce chunks
 				lock.lock();
 				if (chunks_todo.empty()) {
 					tasks.push(-1); // sentinel
