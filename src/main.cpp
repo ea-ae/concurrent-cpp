@@ -2,8 +2,10 @@
 #include "threads.h"
 #include "locks.h"
 #include "sync.h"
+#include "bathroom_problem.h"
 
 #include <thread>
+#include <chrono>
 #include <iostream>
 
 
@@ -17,6 +19,7 @@ int main()
 {
     std::cout << "Hello World!\n";
     // try_threads(); // Threads, futures, promises, tasks
-    //try_locks(); // Mutexes, control variables
-    try_syncing();
+    // try_locks(); // Mutexes, control variables
+    // try_syncing();
+    bathroom_problem(); // Unisex bathroom problem
 }
