@@ -31,6 +31,7 @@ std::atomic<int> inside = 0;
 uint32_t male_count, female_count;
 std::mutex male_count_mut, female_count_mut;
 std::binary_semaphore empty_sem(1);
+std::binary_semaphore door(1);
 std::counting_semaphore male_sem(SPACE);
 std::counting_semaphore female_sem(SPACE);
 
@@ -38,17 +39,20 @@ void use_bathroom(Gender gender) {
 	// wait for x threads to enter, creating a flood of emergency bathroom use / contention for sake of example
 	// we will prioritize the same type of resource (M/F) entering first, because else we would have to wait
 	// for all n resources of a type to finish before allowing a new one (MMMFFFMMMFFF = inefficient)
+	// edit: if we do want to avoid starvation and balance resource type loads, enable the door mutex
 	thread_sleep(100);
 	queue_floodgate.arrive_and_wait(); // barrier of x
 
 	std::string gender_name = gender == Gender::male ? "male" : "female";
 
+	door.acquire();
 	std::unique_lock count_lock(gender == Gender::male ? male_count_mut : female_count_mut);
 	if (++(gender == Gender::male ? male_count : female_count) == 1) {
 		empty_sem.acquire();
 	}
 	count_lock.unlock();
 	(gender == Gender::male ? male_sem : female_sem).acquire();
+	door.release();
 	std::string s = "A " + gender_name + " has entered the bathroom (" + std::to_string(++inside) + ")\n";
 
 	std::cout << s;
