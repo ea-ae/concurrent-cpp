@@ -3,6 +3,7 @@
 #include "locks.h"
 #include "sync.h"
 #include "bathroom_problem.h"
+#include "modern.h"
 
 #include <thread>
 #include <chrono>
@@ -21,5 +22,6 @@ int main()
     // try_threads(); // Threads, futures, promises, tasks
     // try_locks(); // Mutexes, control variables
     // try_syncing();
-    bathroom_problem(); // Unisex bathroom problem
+    // bathroom_problem(); // Unisex bathroom problem
+    modern();
 }

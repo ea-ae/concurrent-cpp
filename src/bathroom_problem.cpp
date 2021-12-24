@@ -8,6 +8,7 @@
 #include <vector>
 #include <iostream>
 
+
 // == Unisex Bathroom Problem ==
 // An attempted solution.
 // Both men and women may (non-politically) enter a unisex bathroom that contains space for N people total,

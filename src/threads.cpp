@@ -15,7 +15,6 @@ int Foo::work(int32_t id, std::shared_ptr<int> input) {
 	return id;
 }
 
-
 void try_threads() {
 	std::vector<std::thread> threads;
 	for (uint32_t i = 0; i < g_processors; i++) { // create thread for every processor

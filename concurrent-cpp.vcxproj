@@ -144,12 +144,14 @@
     <ClCompile Include="src\locks.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\main.h" />
+    <ClCompile Include="src\modern.cpp" />
     <ClCompile Include="src\sync.cpp" />
     <ClCompile Include="src\threads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bathroom_problem.h" />
     <ClInclude Include="src\locks.h" />
+    <ClInclude Include="src\modern.h" />
     <ClInclude Include="src\sync.h" />
     <ClInclude Include="src\threads.h" />
   </ItemGroup>
