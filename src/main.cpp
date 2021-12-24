@@ -19,9 +19,10 @@ void thread_sleep(int32_t ms) {
 int main()
 {
     std::cout << "Hello World!\n";
+    Modern::modern(); // Modern C++ features (non-concurrency)
     // try_threads(); // Threads, futures, promises, tasks
     // try_locks(); // Mutexes, control variables
-    // try_syncing();
+    // try_syncing(); // Latches, barriers, atomics
     // bathroom_problem(); // Unisex bathroom problem
-    modern();
+    // work_and_add_to_stack(64);
 }

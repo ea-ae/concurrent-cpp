@@ -19,10 +19,7 @@ void try_threads() {
 	std::vector<std::thread> threads;
 	for (uint32_t i = 0; i < g_processors; i++) { // create thread for every processor
 		threads.emplace_back([i]() { // perform some calculations in each thread
-			int32_t x = i;
-			for (int32_t j = 0; j < 1'000'000; j++) { 
-				x += (i % 2) + (j % 10);
-			}
+			thread_sleep(100);
 			std::string result = "Done at thread " + std::to_string(i) + ".\n"; // needed for thread-safe cout
 			std::cout << result;
 		});

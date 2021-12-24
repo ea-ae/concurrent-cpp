@@ -56,7 +56,7 @@ void try_locks() {
 				value += 1;
 			});
 		} else { // reader
-			auto t = std::thread([&s_mut, &value] {
+			auto t = std::thread([&s_mut] {
 				auto lock = std::shared_lock(s_mut, std::defer_lock);
 				lock.lock();
 				thread_sleep(100);
